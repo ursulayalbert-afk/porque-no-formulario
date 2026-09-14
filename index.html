@@ -571,15 +571,17 @@
 
 <script>
 /* ══════════════════════════════════════════════════════════════════════
-   PEGA AQUÍ LA URL DEL APPS SCRIPT
+   URL DEL APPS SCRIPT QUE RECIBE LAS RESPUESTAS
    ══════════════════════════════════════════════════════════════════════
-   Sustituye TU_APPS_SCRIPT_URL_AQUI (dejando las comillas) por la URL
-   que te da el despliegue del Apps Script. Termina en /exec.
+   Está en la línea de abajo y es el único sitio del archivo que hay que
+   tocar si alguna vez cambia.
 
-   Tiene que quedar así:
-   const SCRIPT_URL = 'https://script.google.com/macros/s/AKfy...../exec';
+   Tiene que ser la URL del DESPLIEGUE (Implementar → Gestionar
+   implementaciones), no la del editor. Termina en /exec y el identificador
+   son unas 70 letras y números seguidos, sin puntos.
 
-   Es el ÚNICO sitio del archivo que hay que tocar.
+   Para comprobar que sigue viva: abrir esa misma URL en el navegador.
+   Debe devolver {"ok":true,...} sin pedir iniciar sesión.
    ══════════════════════════════════════════════════════════════════════ */
 
 const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbyyfgikt4ekHblxL7z5sefaA7LxfRb36vA3ycGJJjraVcl7DKDdNPMT__LS2LR0nHc6dg/exec';

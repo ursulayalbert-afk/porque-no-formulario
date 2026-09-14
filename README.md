@@ -21,14 +21,17 @@ Nada de Triple Intención en ninguna parte — paleta y logo de ¿Por qué no?.
 | Logo PQN limpio a PNG transparente | Hecho (`logo-pqn.png`) |
 | Google Sheet de respuestas | Creado |
 | `apps-script.gs` escrito, con el ID del Sheet dentro | Hecho |
-| Repo en GitHub | **Pendiente** — hace falta crearlo |
-| GitHub Pages | **Pendiente** |
-| Apps Script creado y desplegado | **Pendiente** |
-| `SCRIPT_URL` dentro del HTML | **Pendiente** — sigue en `TU_APPS_SCRIPT_URL_AQUI` |
-| Envío de prueba verificado en el Sheet | **Pendiente** |
+| Repo en GitHub | Hecho |
+| GitHub Pages | Hecho |
+| Apps Script creado y desplegado | Hecho |
+| `SCRIPT_URL` dentro del HTML | Hecho |
+| Envío de prueba verificado en el Sheet | Hecho (filas de prueba borradas) |
 
-El repo local ya está inicializado, en rama `main`, con un commit hecho.
-En cuanto exista el repo remoto, solo falta añadir el remoto y empujar.
+**En vivo:** https://ursulayalbert-afk.github.io/porque-no-formulario/
+
+Verificado el 14-sep-2026 con un navegador limpio, sin sesión de Google: el
+`/exec` del despliegue devuelve `{"ok":true,...}` sin pedir login, y los envíos
+escriben fila en el Sheet. Acceso público correcto.
 
 ---
 
@@ -89,38 +92,30 @@ o da error de permisos, el despliegue quedó privado: repetir el paso 4.
 
 ### 5. Pegar la URL en el HTML
 
-**Archivo:** `index.html` · **Línea 585**.
+> **Ya está hecho** (14-sep-2026). Esto queda como referencia por si algún día
+> hay que volver a desplegar y cambiar la URL.
 
-Está marcada con un cajón de comentarios que empieza en la línea 574 y pone
-`PEGA AQUÍ LA URL DEL APPS SCRIPT`. Es el único sitio del archivo que hay que
-tocar. Si buscas `TU_APPS_SCRIPT_URL_AQUI` con Ctrl+F vas directo.
+**Archivo:** `index.html`. Es la **única** línea del archivo que empieza por
+`const SCRIPT_URL`. Búscala así con Ctrl+F y vas directo — hay exactamente una.
 
-Antes:
+Va entre comillas simples y termina en `/exec`. Dos avisos:
 
-```js
-const SCRIPT_URL = 'TU_APPS_SCRIPT_URL_AQUI';
-```
-
-Después (la URL entre comillas simples, terminando en `/exec`):
-
-```js
-const SCRIPT_URL = 'https://script.google.com/macros/s/AKfy....../exec';
-```
-
-Cuidado con dos cosas: no borres las comillas, y no dejes el `/exec` fuera —
-la URL del editor de Apps Script no vale, tiene que ser la del despliegue.
+- Tiene que ser la URL del **despliegue** (Implementar → Gestionar
+  implementaciones), no la de la barra de direcciones del editor.
+- El identificador son unas **70 letras y números seguidos, sin puntos**.
+  Si lo que has pegado es corto o lleva puntos suspensivos, no es una URL real.
 
 Luego:
 
 ```bash
 git add index.html
-git commit -m "Conectar SCRIPT_URL"
+git commit -m "Actualizar SCRIPT_URL"
 git push
 ```
 
-Hay una segunda aparición de `TU_APPS_SCRIPT_URL_AQUI` en la línea 706: **esa
-no se toca**. Es la comprobación que evita enviar a ningún sitio mientras la
-URL no esté puesta.
+**Cómo saber que está bien:** abrir esa misma URL en el navegador. Tiene que
+devolver `{"ok":true,...}` sin pedir iniciar sesión. Si pide login o da 404,
+o la URL está mal copiada o el despliegue no quedó en "cualquier persona".
 
 ### 6. Envío de prueba
 

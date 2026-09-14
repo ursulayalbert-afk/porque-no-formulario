@@ -1,0 +1,713 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>¿Por qué no? — cuéntame tu caso</title>
+<meta name="robots" content="noindex, nofollow">
+<meta name="description" content="Unas preguntas para ver si esto es para ti.">
+<link rel="icon" href="logo-pqn.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,700;1,9..40,400&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --bg:      #EEEBE4;
+    --surface: #F8F6F1;
+    --border:  #D6D2C8;
+    --accent:  #E8924A;
+    --accent-d:#CE7A34;
+    --text:    #2A2A2C;
+    --text-2:  #5A5A5C;
+    --muted:   #888884;
+    --danger:  #C05050;
+  }
+
+  html { scroll-behavior: smooth; -webkit-text-size-adjust: 100%; }
+
+  body {
+    font-family: 'DM Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    background-color: var(--bg);
+    color: var(--text);
+    min-height: 100vh;
+    font-weight: 400;
+    line-height: 1.6;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  /* ---------- cabecera ---------- */
+
+  .hero {
+    background-color: var(--text);
+    padding: 40px 22px 44px;
+    text-align: center;
+  }
+
+  .hero img {
+    width: 190px;
+    max-width: 62%;
+    height: auto;
+    display: block;
+    margin: 0 auto 26px;
+  }
+
+  .hero h1 {
+    font-family: 'Bebas Neue', Impact, sans-serif;
+    font-size: clamp(30px, 8vw, 44px);
+    font-weight: 400;
+    letter-spacing: 0.02em;
+    color: var(--surface);
+    line-height: 1.05;
+    margin-bottom: 16px;
+  }
+
+  .hero h1 em { font-style: normal; color: var(--accent); }
+
+  .hero p {
+    font-size: 15px;
+    color: rgba(248,246,241,0.72);
+    max-width: 430px;
+    margin: 0 auto;
+    line-height: 1.7;
+  }
+
+  /* ---------- progreso ---------- */
+
+  .progress-track {
+    height: 4px;
+    background-color: var(--border);
+    position: sticky;
+    top: 0;
+    z-index: 20;
+  }
+
+  .progress-fill {
+    height: 100%;
+    width: 0%;
+    background-color: var(--accent);
+    transition: width 0.35s ease;
+  }
+
+  .form-container {
+    max-width: 620px;
+    margin: 0 auto;
+    padding: 34px 22px 60px;
+  }
+
+  /* ---------- preguntas ---------- */
+
+  .question-block { display: none; }
+  .question-block.visible { display: block; animation: fade 0.3s ease; }
+
+  @keyframes fade {
+    from { opacity: 0; transform: translateY(8px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
+  .q-number {
+    font-size: 12px;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--muted);
+    font-weight: 500;
+    margin-bottom: 12px;
+  }
+
+  .q-text {
+    font-family: 'Bebas Neue', Impact, sans-serif;
+    font-size: clamp(25px, 6.4vw, 33px);
+    font-weight: 400;
+    line-height: 1.12;
+    letter-spacing: 0.01em;
+    margin-bottom: 10px;
+  }
+
+  .q-hint {
+    font-size: 14px;
+    color: var(--text-2);
+    margin-bottom: 22px;
+  }
+
+  .q-text + .options-list,
+  .q-text + .field-wrap { margin-top: 24px; }
+
+  /* ---------- opciones ---------- */
+
+  .options-list { display: flex; flex-direction: column; gap: 10px; }
+
+  .option-item {
+    display: flex;
+    align-items: center;
+    gap: 13px;
+    background-color: var(--surface);
+    border: 1.5px solid var(--border);
+    border-radius: 12px;
+    padding: 15px 16px;
+    cursor: pointer;
+    transition: border-color 0.16s ease, background-color 0.16s ease;
+    -webkit-tap-highlight-color: transparent;
+    min-height: 56px;
+  }
+
+  .option-item:active { transform: scale(0.995); }
+
+  .option-item.selected {
+    border-color: var(--accent);
+    background-color: #FCF3E9;
+  }
+
+  .option-marker {
+    flex: 0 0 auto;
+    width: 21px; height: 21px;
+    border: 1.5px solid var(--border);
+    background-color: #fff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: border-color 0.16s ease, background-color 0.16s ease;
+  }
+
+  .options-list[data-type="single"] .option-marker { border-radius: 50%; }
+  .options-list[data-type="multi"]  .option-marker { border-radius: 5px; }
+
+  .option-item.selected .option-marker {
+    border-color: var(--accent);
+    background-color: var(--accent);
+  }
+
+  .option-marker::after {
+    content: '';
+    opacity: 0;
+    transition: opacity 0.16s ease;
+  }
+
+  .options-list[data-type="single"] .option-marker::after {
+    width: 8px; height: 8px; border-radius: 50%; background-color: #fff;
+  }
+
+  .options-list[data-type="multi"] .option-marker::after {
+    width: 10px; height: 6px;
+    border-left: 2px solid #fff;
+    border-bottom: 2px solid #fff;
+    transform: rotate(-45deg) translate(1px, -2px);
+  }
+
+  .option-item.selected .option-marker::after { opacity: 1; }
+
+  .option-label { font-size: 16px; line-height: 1.4; }
+
+  /* ---------- campos de texto ---------- */
+
+  .field-wrap { display: flex; flex-direction: column; gap: 8px; }
+
+  .text-input, .open-textarea {
+    width: 100%;
+    font-family: inherit;
+    font-size: 16px; /* 16px o mas: evita el zoom automatico en iOS */
+    color: var(--text);
+    background-color: var(--surface);
+    border: 1.5px solid var(--border);
+    border-radius: 12px;
+    padding: 15px 16px;
+    line-height: 1.55;
+    transition: border-color 0.16s ease;
+    -webkit-appearance: none;
+  }
+
+  .text-input { min-height: 56px; }
+  .open-textarea { min-height: 150px; resize: vertical; }
+
+  .text-input:focus, .open-textarea:focus {
+    outline: none;
+    border-color: var(--accent);
+  }
+
+  .text-input::placeholder, .open-textarea::placeholder { color: #AFABA3; }
+
+  .field-error {
+    font-size: 14px;
+    color: var(--danger);
+    font-weight: 500;
+    display: none;
+  }
+
+  .field-error.visible { display: block; }
+
+  .text-input.invalid, .open-textarea.invalid { border-color: var(--danger); }
+
+  /* ---------- navegacion ---------- */
+
+  .nav-row {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-top: 28px;
+  }
+
+  .btn-next {
+    flex: 1 1 auto;
+    font-family: 'Bebas Neue', Impact, sans-serif;
+    font-size: 20px;
+    letter-spacing: 0.06em;
+    color: #fff;
+    background-color: var(--accent);
+    border: none;
+    border-radius: 12px;
+    padding: 17px 24px;
+    cursor: pointer;
+    transition: background-color 0.16s ease, opacity 0.16s ease;
+    min-height: 56px;
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  .btn-next:hover:not(:disabled) { background-color: var(--accent-d); }
+
+  .btn-next:disabled {
+    opacity: 0.4;
+    cursor: not-allowed;
+  }
+
+  .btn-back {
+    flex: 0 0 auto;
+    font-family: inherit;
+    font-size: 14px;
+    color: var(--text-2);
+    background: none;
+    border: 1.5px solid var(--border);
+    border-radius: 12px;
+    padding: 16px 18px;
+    cursor: pointer;
+    min-height: 56px;
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  .btn-back:hover { border-color: var(--muted); }
+
+  .max-note {
+    font-size: 13px;
+    color: var(--muted);
+    margin-top: 12px;
+    min-height: 18px;
+  }
+
+  /* ---------- gracias ---------- */
+
+  .thankyou {
+    display: none;
+    text-align: center;
+    padding: 30px 0 10px;
+  }
+
+  .thankyou.visible { display: block; animation: fade 0.4s ease; }
+
+  .thankyou img {
+    width: 150px;
+    max-width: 55%;
+    height: auto;
+    margin: 0 auto 28px;
+    display: block;
+  }
+
+  .thankyou h2 {
+    font-family: 'Bebas Neue', Impact, sans-serif;
+    font-size: clamp(30px, 8vw, 42px);
+    font-weight: 400;
+    line-height: 1.1;
+    margin-bottom: 18px;
+  }
+
+  .thankyou h2 em { font-style: normal; color: var(--accent); }
+
+  .thankyou p {
+    font-size: 16px;
+    color: var(--text-2);
+    max-width: 400px;
+    margin: 0 auto 14px;
+    line-height: 1.7;
+  }
+
+  .send-state {
+    font-size: 14px;
+    color: var(--muted);
+    margin-top: 22px;
+    min-height: 20px;
+  }
+
+  .send-state.error { color: var(--danger); font-weight: 500; }
+
+  /* ---------- pie ---------- */
+
+  .privacy {
+    border-top: 1px solid var(--border);
+    margin-top: 10px;
+    padding: 26px 22px 40px;
+    text-align: center;
+  }
+
+  .privacy p {
+    font-size: 13px;
+    color: var(--muted);
+    max-width: 440px;
+    margin: 0 auto;
+    line-height: 1.65;
+  }
+
+  @media (max-width: 380px) {
+    .hero { padding: 32px 18px 36px; }
+    .form-container { padding: 28px 18px 50px; }
+    .option-item { padding: 14px 14px; }
+  }
+</style>
+</head>
+<body>
+
+<div class="hero">
+  <img src="logo-pqn.png" alt="¿Por qué no?">
+  <h1>Cuéntame <em>tu caso</em></h1>
+  <p>Unas preguntas para ver si esto es para ti. Cinco minutos. No pido dinero, pido que contestes con calma.</p>
+</div>
+
+<div class="progress-track"><div class="progress-fill" id="progressFill"></div></div>
+
+<div class="form-container" id="formContainer">
+
+  <form id="theForm" onsubmit="return false;">
+
+    <!-- 1 -->
+    <div class="question-block visible" id="q1">
+      <p class="q-number">Pregunta 1 de 12</p>
+      <h2 class="q-text">Nombre y qué vendes</h2>
+      <div class="field-wrap">
+        <input class="text-input" id="f1" type="text" autocomplete="name"
+               placeholder="Ej: Marta, bisutería de plata hecha a mano">
+        <span class="field-error" id="e1">Esta la necesito para saber con quién hablo.</span>
+      </div>
+      <div class="nav-row"><button type="button" class="btn-next" id="next1">Siguiente</button></div>
+    </div>
+
+    <!-- 2 -->
+    <div class="question-block" id="q2">
+      <p class="q-number">Pregunta 2 de 12</p>
+      <h2 class="q-text">Teléfono o usuario de Telegram para escribirte</h2>
+      <div class="field-wrap">
+        <input class="text-input" id="f2" type="text" autocomplete="tel"
+               placeholder="Ej: 600 00 00 00  ·  o  @tuusuario">
+        <span class="field-error" id="e2">Sin esto no puedo escribirte.</span>
+      </div>
+      <div class="nav-row">
+        <button type="button" class="btn-back" id="back2">Atrás</button>
+        <button type="button" class="btn-next" id="next2">Siguiente</button>
+      </div>
+    </div>
+
+    <!-- 3 -->
+    <div class="question-block" id="q3">
+      <p class="q-number">Pregunta 3 de 12</p>
+      <h2 class="q-text">¿Cuántas ferias o mercados haces al mes, más o menos?</h2>
+      <div class="field-wrap">
+        <input class="text-input" id="f3" type="text" placeholder="Ej: 3 o 4, según la temporada">
+      </div>
+      <div class="nav-row">
+        <button type="button" class="btn-back" id="back3">Atrás</button>
+        <button type="button" class="btn-next" id="next3">Siguiente</button>
+      </div>
+    </div>
+
+    <!-- 4 -->
+    <div class="question-block" id="q4">
+      <p class="q-number">Pregunta 4 de 12</p>
+      <h2 class="q-text">Lo que vendes, ¿lo fabricas tú, es mezcla, o es reventa?</h2>
+      <div class="options-list" data-type="single" data-name="p04">
+        <div class="option-item"><span class="option-marker"></span><span class="option-label">Lo fabrico yo</span></div>
+        <div class="option-item"><span class="option-marker"></span><span class="option-label">Mezcla</span></div>
+        <div class="option-item"><span class="option-marker"></span><span class="option-label">Reventa</span></div>
+      </div>
+      <div class="nav-row">
+        <button type="button" class="btn-back" id="back4">Atrás</button>
+        <button type="button" class="btn-next" id="next4" disabled>Siguiente</button>
+      </div>
+    </div>
+
+    <!-- 5 -->
+    <div class="question-block" id="q5">
+      <p class="q-number">Pregunta 5 de 12</p>
+      <h2 class="q-text">¿Cómo estás con la venta online?</h2>
+      <div class="options-list" data-type="single" data-name="p05">
+        <div class="option-item"><span class="option-marker"></span><span class="option-label">No tengo web</span></div>
+        <div class="option-item"><span class="option-marker"></span><span class="option-label">Tengo web pero no vende</span></div>
+        <div class="option-item"><span class="option-marker"></span><span class="option-label">Menos de 1.000 €/mes</span></div>
+        <div class="option-item"><span class="option-marker"></span><span class="option-label">Entre 1.000 y 3.000 €/mes</span></div>
+        <div class="option-item"><span class="option-marker"></span><span class="option-label">Más de 3.000 €/mes</span></div>
+      </div>
+      <div class="nav-row">
+        <button type="button" class="btn-back" id="back5">Atrás</button>
+        <button type="button" class="btn-next" id="next5" disabled>Siguiente</button>
+      </div>
+    </div>
+
+    <!-- 6 -->
+    <div class="question-block" id="q6">
+      <p class="q-number">Pregunta 6 de 12</p>
+      <h2 class="q-text">¿Qué es lo que peor llevas de depender de las ferias?</h2>
+      <div class="field-wrap">
+        <textarea class="open-textarea" id="f6" placeholder="Sin filtros. Lo que de verdad te pesa."></textarea>
+      </div>
+      <div class="nav-row">
+        <button type="button" class="btn-back" id="back6">Atrás</button>
+        <button type="button" class="btn-next" id="next6">Siguiente</button>
+      </div>
+    </div>
+
+    <!-- 7 -->
+    <div class="question-block" id="q7">
+      <p class="q-number">Pregunta 7 de 12</p>
+      <h2 class="q-text">¿Qué has intentado ya para vender fuera de la feria, y qué pasó?</h2>
+      <div class="field-wrap">
+        <textarea class="open-textarea" id="f7" placeholder="Aunque no funcionara. Sobre todo si no funcionó."></textarea>
+      </div>
+      <div class="nav-row">
+        <button type="button" class="btn-back" id="back7">Atrás</button>
+        <button type="button" class="btn-next" id="next7">Siguiente</button>
+      </div>
+    </div>
+
+    <!-- 8 -->
+    <div class="question-block" id="q8">
+      <p class="q-number">Pregunta 8 de 12</p>
+      <h2 class="q-text">¿Cuántas horas a la semana puedes dedicarle de verdad?</h2>
+      <div class="options-list" data-type="single" data-name="p08">
+        <div class="option-item"><span class="option-marker"></span><span class="option-label">Menos de 2</span></div>
+        <div class="option-item"><span class="option-marker"></span><span class="option-label">2-5</span></div>
+        <div class="option-item"><span class="option-marker"></span><span class="option-label">5-10</span></div>
+        <div class="option-item"><span class="option-marker"></span><span class="option-label">Más de 10</span></div>
+      </div>
+      <div class="nav-row">
+        <button type="button" class="btn-back" id="back8">Atrás</button>
+        <button type="button" class="btn-next" id="next8" disabled>Siguiente</button>
+      </div>
+    </div>
+
+    <!-- 9 -->
+    <div class="question-block" id="q9">
+      <p class="q-number">Pregunta 9 de 12</p>
+      <h2 class="q-text">¿Has pagado antes por formación o asesoría para tu negocio?</h2>
+      <p class="q-hint">¿Cuánto, aproximadamente?</p>
+      <div class="field-wrap">
+        <input class="text-input" id="f9" type="text" placeholder="Ej: un curso de 300 € · o nunca">
+      </div>
+      <div class="nav-row">
+        <button type="button" class="btn-back" id="back9">Atrás</button>
+        <button type="button" class="btn-next" id="next9">Siguiente</button>
+      </div>
+    </div>
+
+    <!-- 10 -->
+    <div class="question-block" id="q10">
+      <p class="q-number">Pregunta 10 de 12</p>
+      <h2 class="q-text">Si decides hacerlo, ¿la decisión la tomas tú o entre varios?</h2>
+      <div class="options-list" data-type="single" data-name="p10">
+        <div class="option-item"><span class="option-marker"></span><span class="option-label">Yo solo</span></div>
+        <div class="option-item"><span class="option-marker"></span><span class="option-label">Entre varios</span></div>
+      </div>
+      <div class="nav-row">
+        <button type="button" class="btn-back" id="back10">Atrás</button>
+        <button type="button" class="btn-next" id="next10" disabled>Siguiente</button>
+      </div>
+    </div>
+
+    <!-- 11 -->
+    <div class="question-block" id="q11">
+      <p class="q-number">Pregunta 11 de 12</p>
+      <h2 class="q-text">¿Cuándo te gustaría empezar?</h2>
+      <div class="options-list" data-type="single" data-name="p11">
+        <div class="option-item"><span class="option-marker"></span><span class="option-label">Ya</span></div>
+        <div class="option-item"><span class="option-marker"></span><span class="option-label">En uno o dos meses</span></div>
+        <div class="option-item"><span class="option-marker"></span><span class="option-label">Más adelante</span></div>
+        <div class="option-item"><span class="option-marker"></span><span class="option-label">Solo estoy mirando</span></div>
+      </div>
+      <div class="nav-row">
+        <button type="button" class="btn-back" id="back11">Atrás</button>
+        <button type="button" class="btn-next" id="next11" disabled>Siguiente</button>
+      </div>
+    </div>
+
+    <!-- 12 -->
+    <div class="question-block" id="q12">
+      <p class="q-number">Pregunta 12 de 12</p>
+      <h2 class="q-text">¿Dónde sigues a gente que enseñe de esto?</h2>
+      <p class="q-hint">Puedes marcar varias.</p>
+      <div class="options-list" data-type="multi" data-name="p12">
+        <div class="option-item"><span class="option-marker"></span><span class="option-label">Instagram</span></div>
+        <div class="option-item"><span class="option-marker"></span><span class="option-label">YouTube</span></div>
+        <div class="option-item"><span class="option-marker"></span><span class="option-label">Facebook</span></div>
+        <div class="option-item"><span class="option-marker"></span><span class="option-label">Asociaciones de artesanos</span></div>
+        <div class="option-item"><span class="option-marker"></span><span class="option-label">En ferias, boca a boca</span></div>
+        <div class="option-item"><span class="option-marker"></span><span class="option-label">No sigo a nadie</span></div>
+      </div>
+      <p class="max-note" id="maxNote12"></p>
+      <div class="nav-row">
+        <button type="button" class="btn-back" id="back12">Atrás</button>
+        <button type="button" class="btn-next" id="next12" disabled>Enviar</button>
+      </div>
+    </div>
+
+  </form>
+
+  <div class="thankyou" id="thankyou">
+    <img src="logo-pqn.png" alt="">
+    <h2>Gracias.</h2>
+    <p>Si encajas, te escribo yo en persona.</p>
+    <p>No hace falta que hagas nada más.</p>
+    <p class="send-state" id="sendState">Enviando…</p>
+  </div>
+
+</div>
+
+<div class="privacy">
+  <p>Tus datos solo los uso yo para escribirte. No se comparten con nadie.</p>
+</div>
+
+<script>
+const SCRIPT_URL = 'TU_APPS_SCRIPT_URL_AQUI';
+
+const TOTAL = 12;
+let current = 1;
+const answers = {};
+
+/* Campos de texto: id del input -> clave de respuesta, y si es obligatorio. */
+const TEXT_FIELDS = {
+  1:  { el: 'f1', key: 'p01', required: true  },
+  2:  { el: 'f2', key: 'p02', required: true  },
+  3:  { el: 'f3', key: 'p03', required: false },
+  6:  { el: 'f6', key: 'p06', required: false },
+  7:  { el: 'f7', key: 'p07', required: false },
+  9:  { el: 'f9', key: 'p09', required: false }
+};
+
+function updateProgress() {
+  document.getElementById('progressFill').style.width = (((current - 1) / TOTAL) * 100) + '%';
+}
+
+function goTo(n) {
+  document.getElementById('q' + current).classList.remove('visible');
+  current = n;
+  document.getElementById('q' + current).classList.add('visible');
+  updateProgress();
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+/* Opciones (unica y multiple) */
+function initOptions() {
+  document.querySelectorAll('.options-list').forEach(list => {
+    const type = list.dataset.type;
+    const name = list.dataset.name;
+    const items = list.querySelectorAll('.option-item');
+    const qNum = list.closest('.question-block').id.replace('q', '');
+    const nextBtn = document.getElementById('next' + qNum);
+
+    items.forEach(item => {
+      item.addEventListener('click', () => {
+        if (type === 'single') {
+          items.forEach(i => i.classList.remove('selected'));
+          item.classList.add('selected');
+          answers[name] = item.querySelector('.option-label').textContent;
+          if (nextBtn) nextBtn.disabled = false;
+        } else {
+          item.classList.toggle('selected');
+          const sel = list.querySelectorAll('.option-item.selected');
+          answers[name] = Array.from(sel)
+            .map(i => i.querySelector('.option-label').textContent)
+            .join(' | ');
+          if (nextBtn) nextBtn.disabled = sel.length === 0;
+        }
+      });
+    });
+  });
+}
+
+/* Validacion de los campos de texto */
+function captureText(step) {
+  const cfg = TEXT_FIELDS[step];
+  if (!cfg) return true;
+  const el = document.getElementById(cfg.el);
+  const err = document.getElementById('e' + step);
+  const val = el.value.trim();
+
+  if (cfg.required && val === '') {
+    el.classList.add('invalid');
+    if (err) err.classList.add('visible');
+    el.focus();
+    return false;
+  }
+  el.classList.remove('invalid');
+  if (err) err.classList.remove('visible');
+  answers[cfg.key] = val === '' ? '(Sin respuesta)' : val;
+  return true;
+}
+
+/* Quitar el aviso de error en cuanto empieza a escribir */
+Object.entries(TEXT_FIELDS).forEach(([step, cfg]) => {
+  const el = document.getElementById(cfg.el);
+  const err = document.getElementById('e' + step);
+  if (!el) return;
+  el.addEventListener('input', () => {
+    el.classList.remove('invalid');
+    if (err) err.classList.remove('visible');
+  });
+});
+
+/* Navegacion */
+for (let i = 1; i <= TOTAL; i++) {
+  const next = document.getElementById('next' + i);
+  if (next) {
+    next.addEventListener('click', () => {
+      if (!captureText(i)) return;
+      if (i < TOTAL) goTo(i + 1);
+      else submitForm();
+    });
+  }
+  const back = document.getElementById('back' + i);
+  if (back) {
+    back.addEventListener('click', () => {
+      captureText(i);            // guarda lo escrito, sin bloquear al volver
+      const el = document.getElementById('f' + i);
+      if (el) { el.classList.remove('invalid'); }
+      const err = document.getElementById('e' + i);
+      if (err) err.classList.remove('visible');
+      goTo(i - 1);
+    });
+  }
+}
+
+function submitForm() {
+  document.getElementById('theForm').style.display = 'none';
+  document.getElementById('progressFill').style.width = '100%';
+  document.getElementById('thankyou').classList.add('visible');
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+
+  const state = document.getElementById('sendState');
+
+  if (SCRIPT_URL === 'TU_APPS_SCRIPT_URL_AQUI') {
+    state.textContent = '';
+    return;
+  }
+
+  const payload = new FormData();
+  payload.append('enviado_en', new Date().toISOString());
+  Object.entries(answers).forEach(([k, v]) => payload.append(k, v));
+
+  fetch(SCRIPT_URL, { method: 'POST', body: payload })
+    .then(() => { state.textContent = 'Respuesta recibida.'; })
+    .catch(() => {
+      state.textContent = 'No se ha podido enviar. Escríbeme por Telegram a @Por_que_no_bot y lo arreglamos.';
+      state.classList.add('error');
+    });
+}
+
+initOptions();
+updateProgress();
+</script>
+</body>
+</html>

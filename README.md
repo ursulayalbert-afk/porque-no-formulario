@@ -89,17 +89,38 @@ o da error de permisos, el despliegue quedó privado: repetir el paso 4.
 
 ### 5. Pegar la URL en el HTML
 
-En `index.html`, línea del principio del `<script>`:
+**Archivo:** `index.html` · **Línea 585**.
+
+Está marcada con un cajón de comentarios que empieza en la línea 574 y pone
+`PEGA AQUÍ LA URL DEL APPS SCRIPT`. Es el único sitio del archivo que hay que
+tocar. Si buscas `TU_APPS_SCRIPT_URL_AQUI` con Ctrl+F vas directo.
+
+Antes:
 
 ```js
 const SCRIPT_URL = 'TU_APPS_SCRIPT_URL_AQUI';
 ```
 
-Sustituir por la URL `/exec`. Luego:
+Después (la URL entre comillas simples, terminando en `/exec`):
+
+```js
+const SCRIPT_URL = 'https://script.google.com/macros/s/AKfy....../exec';
+```
+
+Cuidado con dos cosas: no borres las comillas, y no dejes el `/exec` fuera —
+la URL del editor de Apps Script no vale, tiene que ser la del despliegue.
+
+Luego:
 
 ```bash
-git add index.html && git commit -m "Conectar SCRIPT_URL" && git push
+git add index.html
+git commit -m "Conectar SCRIPT_URL"
+git push
 ```
+
+Hay una segunda aparición de `TU_APPS_SCRIPT_URL_AQUI` en la línea 706: **esa
+no se toca**. Es la comprobación que evita enviar a ningún sitio mientras la
+URL no esté puesta.
 
 ### 6. Envío de prueba
 

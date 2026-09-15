@@ -1,0 +1,975 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>Solicitud — De la parada a Shopify</title>
+<meta name="robots" content="noindex, nofollow">
+<meta name="description" content="Solicitud para la primera edición de De la parada a Shopify.">
+<link rel="icon" href="logo-pqn.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,700;1,9..40,400&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --bg:      #EEEBE4;
+    --surface: #F8F6F1;
+    --border:  #D6D2C8;
+    --accent:  #E8924A;
+    --accent-d:#CE7A34;
+    --text:    #2A2A2C;
+    --text-2:  #5A5A5C;
+    --muted:   #888884;
+    --danger:  #C05050;
+  }
+
+  html { scroll-behavior: smooth; -webkit-text-size-adjust: 100%; }
+
+  body {
+    font-family: 'DM Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    background-color: var(--bg);
+    color: var(--text);
+    min-height: 100vh;
+    font-weight: 400;
+    line-height: 1.6;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  .sr-only {
+    position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px;
+    overflow: hidden; clip: rect(0,0,0,0); white-space: nowrap; border: 0;
+  }
+
+  /* ---------- cabecera ---------- */
+
+  .hero {
+    background-color: var(--text);
+    padding: 40px 22px 44px;
+    text-align: center;
+  }
+
+  .hero img {
+    width: 170px;
+    max-width: 55%;
+    height: auto;
+    display: block;
+    margin: 0 auto 24px;
+  }
+
+  .hero h1 {
+    font-family: 'Bebas Neue', Impact, sans-serif;
+    font-size: clamp(28px, 7.4vw, 42px);
+    font-weight: 400;
+    letter-spacing: 0.02em;
+    color: var(--surface);
+    line-height: 1.06;
+    margin: 0 auto 18px;
+    max-width: 520px;
+  }
+
+  .hero h1 em { font-style: normal; color: var(--accent); }
+
+  .hero p {
+    font-size: 15px;
+    color: rgba(248,246,241,0.74);
+    max-width: 440px;
+    margin: 0 auto;
+    line-height: 1.7;
+  }
+
+  /* ---------- progreso ---------- */
+
+  .progress-track {
+    height: 4px;
+    background-color: var(--border);
+    position: sticky;
+    top: 0;
+    z-index: 20;
+  }
+
+  .progress-fill {
+    height: 100%;
+    width: 0%;
+    background-color: var(--accent);
+    transition: width 0.35s ease;
+  }
+
+  .form-container {
+    max-width: 620px;
+    margin: 0 auto;
+    padding: 34px 22px 60px;
+  }
+
+  /* ---------- preguntas ---------- */
+
+  .question-block { display: none; }
+  .question-block.visible { display: block; animation: fade 0.3s ease; }
+
+  @keyframes fade {
+    from { opacity: 0; transform: translateY(8px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
+  .q-number {
+    font-size: 12px;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--muted);
+    font-weight: 500;
+    margin-bottom: 12px;
+  }
+
+  .q-text {
+    font-family: 'Bebas Neue', Impact, sans-serif;
+    font-size: clamp(25px, 6.4vw, 33px);
+    font-weight: 400;
+    line-height: 1.12;
+    letter-spacing: 0.01em;
+    margin-bottom: 10px;
+  }
+
+  /* Preguntas largas: mismo estilo, cuerpo algo menor para que respiren en movil */
+  .q-text.long { font-size: clamp(22px, 5.6vw, 29px); line-height: 1.14; }
+
+  .q-text em { font-style: normal; color: var(--accent); }
+
+  .q-hint {
+    font-size: 14px;
+    color: var(--text-2);
+    margin-bottom: 22px;
+  }
+
+  .q-hint + .q-hint { margin-top: -14px; }
+
+  .q-text + .options-list,
+  .q-text + .field-wrap,
+  .q-text + .upload-wrap { margin-top: 24px; }
+
+  /* ---------- opciones ---------- */
+
+  .options-list { display: flex; flex-direction: column; gap: 10px; }
+
+  .option-item {
+    display: flex;
+    align-items: center;
+    gap: 13px;
+    background-color: var(--surface);
+    border: 1.5px solid var(--border);
+    border-radius: 12px;
+    padding: 15px 16px;
+    cursor: pointer;
+    transition: border-color 0.16s ease, background-color 0.16s ease;
+    -webkit-tap-highlight-color: transparent;
+    min-height: 56px;
+  }
+
+  .option-item:active { transform: scale(0.995); }
+
+  .option-item.selected {
+    border-color: var(--accent);
+    background-color: #FCF3E9;
+  }
+
+  .option-marker {
+    flex: 0 0 auto;
+    width: 21px; height: 21px;
+    border: 1.5px solid var(--border);
+    border-radius: 50%;
+    background-color: #fff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: border-color 0.16s ease, background-color 0.16s ease;
+  }
+
+  .option-item.selected .option-marker {
+    border-color: var(--accent);
+    background-color: var(--accent);
+  }
+
+  .option-marker::after {
+    content: '';
+    width: 8px; height: 8px; border-radius: 50%; background-color: #fff;
+    opacity: 0;
+    transition: opacity 0.16s ease;
+  }
+
+  .option-item.selected .option-marker::after { opacity: 1; }
+
+  .option-label { font-size: 16px; line-height: 1.4; }
+
+  /* ---------- campos de texto ---------- */
+
+  .field-wrap { display: flex; flex-direction: column; gap: 8px; }
+
+  .field-label {
+    font-size: 14px;
+    font-weight: 500;
+    color: var(--text-2);
+  }
+
+  .text-input, .open-textarea {
+    width: 100%;
+    font-family: inherit;
+    font-size: 16px; /* 16px o mas: evita el zoom automatico en iOS */
+    color: var(--text);
+    background-color: var(--surface);
+    border: 1.5px solid var(--border);
+    border-radius: 12px;
+    padding: 15px 16px;
+    line-height: 1.55;
+    transition: border-color 0.16s ease;
+    -webkit-appearance: none;
+  }
+
+  .text-input { min-height: 56px; }
+  .open-textarea { min-height: 150px; resize: vertical; }
+  .open-textarea.short { min-height: 96px; }
+
+  .text-input:focus, .open-textarea:focus {
+    outline: none;
+    border-color: var(--accent);
+  }
+
+  .text-input::placeholder, .open-textarea::placeholder { color: #AFABA3; }
+
+  .field-error {
+    font-size: 14px;
+    color: var(--danger);
+    font-weight: 500;
+    display: none;
+  }
+
+  .field-error.visible { display: block; }
+
+  .text-input.invalid, .open-textarea.invalid { border-color: var(--danger); }
+  .options-list.invalid .option-item { border-color: var(--danger); }
+
+  /* ---------- subida de foto ---------- */
+
+  .upload-wrap { display: flex; flex-direction: column; gap: 8px; margin-bottom: 22px; }
+
+  .upload-box {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    min-height: 150px;
+    padding: 22px 18px;
+    background-color: var(--surface);
+    border: 1.5px dashed var(--border);
+    border-radius: 12px;
+    cursor: pointer;
+    text-align: center;
+    transition: border-color 0.16s ease, background-color 0.16s ease;
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  .upload-box:hover, .upload-box:focus-within { border-color: var(--accent); }
+  .upload-box.invalid { border-color: var(--danger); }
+
+  .upload-box svg {
+    width: 34px; height: 34px;
+    stroke: var(--accent); fill: none; stroke-width: 1.6;
+  }
+
+  .upload-title {
+    font-family: 'Bebas Neue', Impact, sans-serif;
+    font-size: 21px;
+    letter-spacing: 0.05em;
+    color: var(--text);
+  }
+
+  .upload-sub { font-size: 13px; color: var(--muted); }
+
+  .upload-preview {
+    display: none;
+    flex-direction: column;
+    align-items: center;
+    gap: 12px;
+    background-color: var(--surface);
+    border: 1.5px solid var(--accent);
+    border-radius: 12px;
+    padding: 14px;
+  }
+
+  .upload-preview.visible { display: flex; }
+
+  .upload-preview img {
+    max-width: 100%;
+    max-height: 280px;
+    border-radius: 8px;
+    object-fit: contain;
+    display: block;
+  }
+
+  .upload-change {
+    font-family: inherit;
+    font-size: 14px;
+    color: var(--text-2);
+    background: none;
+    border: 1.5px solid var(--border);
+    border-radius: 10px;
+    padding: 11px 18px;
+    min-height: 44px;
+    cursor: pointer;
+  }
+
+  .upload-state { font-size: 14px; color: var(--muted); min-height: 20px; }
+  .upload-state.error { color: var(--danger); font-weight: 500; }
+
+  /* ---------- navegacion ---------- */
+
+  .nav-row {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-top: 28px;
+  }
+
+  .btn-next {
+    flex: 1 1 auto;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    font-family: 'Bebas Neue', Impact, sans-serif;
+    font-size: 20px;
+    letter-spacing: 0.06em;
+    color: #fff;
+    background-color: var(--accent);
+    border: none;
+    border-radius: 12px;
+    padding: 17px 24px;
+    cursor: pointer;
+    transition: background-color 0.16s ease, opacity 0.16s ease;
+    min-height: 56px;
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  .btn-next:hover:not(:disabled) { background-color: var(--accent-d); }
+
+  .btn-next:disabled { opacity: 0.45; cursor: not-allowed; }
+
+  .btn-back {
+    flex: 0 0 auto;
+    font-family: inherit;
+    font-size: 14px;
+    color: var(--text-2);
+    background: none;
+    border: 1.5px solid var(--border);
+    border-radius: 12px;
+    padding: 16px 18px;
+    cursor: pointer;
+    min-height: 56px;
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  .btn-back:hover { border-color: var(--muted); }
+  .btn-back:disabled { opacity: 0.45; cursor: not-allowed; }
+
+  .spinner {
+    width: 18px; height: 18px;
+    border: 2.5px solid rgba(255,255,255,0.45);
+    border-top-color: #fff;
+    border-radius: 50%;
+    display: none;
+    animation: spin 0.8s linear infinite;
+  }
+
+  .sending .spinner { display: inline-block; }
+
+  @keyframes spin { to { transform: rotate(360deg); } }
+
+  .send-state {
+    font-size: 14px;
+    color: var(--muted);
+    margin-top: 14px;
+    min-height: 20px;
+    line-height: 1.55;
+  }
+
+  .send-state.error { color: var(--danger); font-weight: 500; }
+
+  /* ---------- gracias ---------- */
+
+  .thankyou {
+    display: none;
+    text-align: center;
+    padding: 30px 0 10px;
+  }
+
+  .thankyou.visible { display: block; animation: fade 0.4s ease; }
+
+  .thankyou img {
+    width: 150px;
+    max-width: 55%;
+    height: auto;
+    margin: 0 auto 28px;
+    display: block;
+  }
+
+  .thankyou h2 {
+    font-family: 'Bebas Neue', Impact, sans-serif;
+    font-size: clamp(30px, 8vw, 42px);
+    font-weight: 400;
+    line-height: 1.1;
+    margin-bottom: 18px;
+  }
+
+  .thankyou p {
+    font-size: 16px;
+    color: var(--text-2);
+    max-width: 400px;
+    margin: 0 auto 14px;
+    line-height: 1.7;
+  }
+
+  /* ---------- pie ---------- */
+
+  .privacy {
+    border-top: 1px solid var(--border);
+    margin-top: 10px;
+    padding: 26px 22px 40px;
+    text-align: center;
+  }
+
+  .privacy p {
+    font-size: 13px;
+    color: var(--muted);
+    max-width: 440px;
+    margin: 0 auto;
+    line-height: 1.65;
+  }
+
+  @media (max-width: 380px) {
+    .hero { padding: 32px 18px 36px; }
+    .form-container { padding: 28px 18px 50px; }
+    .option-item { padding: 14px 14px; }
+  }
+</style>
+</head>
+<body>
+
+<div class="hero">
+  <img src="logo-pqn.png" alt="¿Por qué no?">
+  <h1>Solicitud para la primera edición de <em>“De la parada a Shopify”</em></h1>
+  <p>Esto no es una compra: es una solicitud. Quiero conocer tu situación real para decirte con honestidad si este programa te encaja o no — y si no te encaja, te lo diré. Son 5 minutos. Cuanto más concreto seas, mejor.</p>
+</div>
+
+<div class="progress-track"><div class="progress-fill" id="progressFill"></div></div>
+
+<div class="form-container">
+
+  <form id="theForm" novalidate onsubmit="return false;">
+
+    <!-- 1 -->
+    <div class="question-block visible" id="q1">
+      <p class="q-number">Pregunta 1 de 10</p>
+      <h2 class="q-text">Tu nombre, tu marca y un WhatsApp o email de contacto.</h2>
+      <div class="field-wrap">
+        <input class="text-input" id="f1" type="text" autocomplete="off"
+               placeholder="Ej: Marta · Plata de Marta · 600 00 00 00">
+        <span class="field-error" id="e1">Esta la necesito para poder contestarte.</span>
+      </div>
+      <div class="nav-row"><button type="button" class="btn-next" id="next1">Siguiente</button></div>
+    </div>
+
+    <!-- 2 -->
+    <div class="question-block" id="q2">
+      <p class="q-number">Pregunta 2 de 10</p>
+      <h2 class="q-text">¿Qué vendes y lo haces tú?</h2>
+      <div class="field-wrap">
+        <input class="text-input" id="f2" type="text" placeholder="Ej: pendientes de plata, los hago yo en mi taller">
+        <span class="field-error" id="e2">Esta es obligatoria.</span>
+      </div>
+      <div class="nav-row">
+        <button type="button" class="btn-back" id="back2">Atrás</button>
+        <button type="button" class="btn-next" id="next2">Siguiente</button>
+      </div>
+    </div>
+
+    <!-- 3 -->
+    <div class="question-block" id="q3">
+      <p class="q-number">Pregunta 3 de 10</p>
+      <h2 class="q-text long">En las últimas 4 semanas, ¿cuántos días has estado de feria y cuánto has vendido, aproximadamente?</h2>
+      <p class="q-hint">Real, no tu mejor feria del año.</p>
+      <div class="field-wrap">
+        <input class="text-input" id="f3" type="text" placeholder="Ej: 6 días, unos 1.800 €">
+        <span class="field-error" id="e3">Esta es obligatoria.</span>
+      </div>
+      <div class="nav-row">
+        <button type="button" class="btn-back" id="back3">Atrás</button>
+        <button type="button" class="btn-next" id="next3">Siguiente</button>
+      </div>
+    </div>
+
+    <!-- 4 -->
+    <div class="question-block" id="q4">
+      <p class="q-number">Pregunta 4 de 10</p>
+      <h2 class="q-text">¿Cómo estás ahora mismo con la venta online?</h2>
+      <div class="options-list" data-name="p04">
+        <div class="option-item" role="radio" tabindex="0"><span class="option-marker"></span><span class="option-label">No tengo nada montado.</span></div>
+        <div class="option-item" role="radio" tabindex="0"><span class="option-marker"></span><span class="option-label">Tengo web/Instagram pero casi no vende.</span></div>
+        <div class="option-item" role="radio" tabindex="0"><span class="option-marker"></span><span class="option-label">Vendo algo online, menos de ~1.000 €/mes.</span></div>
+        <div class="option-item" role="radio" tabindex="0"><span class="option-marker"></span><span class="option-label">Vendo online más de ~1.000 €/mes.</span></div>
+      </div>
+      <div class="nav-row">
+        <button type="button" class="btn-back" id="back4">Atrás</button>
+        <button type="button" class="btn-next" id="next4" disabled>Siguiente</button>
+      </div>
+    </div>
+
+    <!-- 5 -->
+    <div class="question-block" id="q5">
+      <p class="q-number">Pregunta 5 de 10</p>
+      <h2 class="q-text">Si tienes web o Instagram, pega aquí los enlaces.</h2>
+      <p class="q-hint">Es lo que miraré antes de hablar contigo.</p>
+      <div class="field-wrap">
+        <textarea class="open-textarea short" id="f5" autocapitalize="off" spellcheck="false"
+                  placeholder="Ej: instagram.com/tumarca · tumarca.com"></textarea>
+      </div>
+      <div class="nav-row">
+        <button type="button" class="btn-back" id="back5">Atrás</button>
+        <button type="button" class="btn-next" id="next5">Siguiente</button>
+      </div>
+    </div>
+
+    <!-- 6 -->
+    <div class="question-block" id="q6">
+      <p class="q-number">Pregunta 6 de 10</p>
+      <h2 class="q-text">¿Qué horas <em>concretas</em> de tu semana reservarías para esto?</h2>
+      <p class="q-hint">Ejemplo: “martes 16-18, jueves 16-18, viernes 9-10”.</p>
+      <p class="q-hint">No “las que haga falta” — dime días y horas.</p>
+      <div class="field-wrap">
+        <input class="text-input" id="f6" type="text" placeholder="Días y horas">
+        <span class="field-error" id="e6">Esta es obligatoria.</span>
+      </div>
+      <div class="nav-row">
+        <button type="button" class="btn-back" id="back6">Atrás</button>
+        <button type="button" class="btn-next" id="next6">Siguiente</button>
+      </div>
+    </div>
+
+    <!-- 7 -->
+    <div class="question-block" id="q7">
+      <p class="q-number">Pregunta 7 de 10</p>
+      <h2 class="q-text long">Además de la inversión del programa, ¿podrías asumir los costes normales de operar y probar el canal (packaging, alguna app, algo de publicidad para pruebas)?</h2>
+      <div class="options-list" data-name="p07">
+        <div class="option-item" role="radio" tabindex="0"><span class="option-marker"></span><span class="option-label">Sí, sin problema.</span></div>
+        <div class="option-item" role="radio" tabindex="0"><span class="option-marker"></span><span class="option-label">Justo, pero sí.</span></div>
+        <div class="option-item" role="radio" tabindex="0"><span class="option-marker"></span><span class="option-label">Ahora mismo no.</span></div>
+      </div>
+      <div class="nav-row">
+        <button type="button" class="btn-back" id="back7">Atrás</button>
+        <button type="button" class="btn-next" id="next7" disabled>Siguiente</button>
+      </div>
+    </div>
+
+    <!-- 8 -->
+    <div class="question-block" id="q8">
+      <p class="q-number">Pregunta 8 de 10</p>
+      <h2 class="q-text">Cuéntame algo que empezaste con ilusión y no terminaste. ¿Qué pasó?</h2>
+      <div class="field-wrap">
+        <textarea class="open-textarea" id="f8"></textarea>
+        <span class="field-error" id="e8">Esta es obligatoria.</span>
+      </div>
+      <div class="nav-row">
+        <button type="button" class="btn-back" id="back8">Atrás</button>
+        <button type="button" class="btn-next" id="next8">Siguiente</button>
+      </div>
+    </div>
+
+    <!-- 9 -->
+    <div class="question-block" id="q9">
+      <p class="q-number">Pregunta 9 de 10</p>
+      <h2 class="q-text long">Si trabajas y las primeras semanas la venta online no responde como esperabas, ¿qué estarías dispuesto a seguir haciendo durante 90 días antes de concluir que esto no funciona?</h2>
+      <div class="field-wrap">
+        <textarea class="open-textarea" id="f9"></textarea>
+        <span class="field-error" id="e9">Esta es obligatoria.</span>
+      </div>
+      <div class="nav-row">
+        <button type="button" class="btn-back" id="back9">Atrás</button>
+        <button type="button" class="btn-next" id="next9">Siguiente</button>
+      </div>
+    </div>
+
+    <!-- 10 -->
+    <div class="question-block" id="q10">
+      <p class="q-number">Pregunta 10 de 10</p>
+      <h2 class="q-text long">Última cosa (y cuenta): mándame una foto de tu producto estrella y dime en <em>una</em> frase a quién se lo vendes y por qué te lo compran a&nbsp;ti.</h2>
+
+      <div class="upload-wrap">
+        <label class="upload-box" id="uploadBox" for="foto">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" d="M3 8.5A2.5 2.5 0 0 1 5.5 6h1.8l1.2-1.8A1.5 1.5 0 0 1 9.8 3.5h4.4a1.5 1.5 0 0 1 1.3.7L16.7 6h1.8A2.5 2.5 0 0 1 21 8.5v9a2.5 2.5 0 0 1-2.5 2.5h-13A2.5 2.5 0 0 1 3 17.5z"/><circle cx="12" cy="12.5" r="3.8"/></svg>
+          <span class="upload-title">Elegir foto</span>
+          <span class="upload-sub">Desde la galería o hazla ahora</span>
+          <input class="sr-only" id="foto" type="file" accept="image/*">
+        </label>
+        <div class="upload-preview" id="uploadPreview">
+          <img id="fotoPreview" alt="Foto elegida">
+          <button type="button" class="upload-change" id="fotoCambiar">Cambiar foto</button>
+        </div>
+        <span class="upload-state" id="uploadState"></span>
+        <span class="field-error" id="e10foto">Falta la foto.</span>
+      </div>
+
+      <div class="field-wrap">
+        <label class="field-label" for="f10">Tu frase</label>
+        <textarea class="open-textarea short" id="f10"
+                  placeholder="A quién se lo vendes y por qué te lo compran a ti"></textarea>
+        <span class="field-error" id="e10">Falta la frase.</span>
+      </div>
+
+      <div class="nav-row">
+        <button type="button" class="btn-back" id="back10">Atrás</button>
+        <button type="button" class="btn-next" id="next10"><span class="spinner"></span><span id="sendLabel">Enviar solicitud</span></button>
+      </div>
+      <p class="send-state" id="sendState" role="status" aria-live="polite"></p>
+    </div>
+
+  </form>
+
+  <div class="thankyou" id="thankyou">
+    <img src="logo-pqn.png" alt="">
+    <h2>Gracias.</h2>
+    <p>Tu solicitud me ha llegado.</p>
+    <p>La leo con calma y te respondo yo, encajes o no.</p>
+  </div>
+
+</div>
+
+<div class="privacy">
+  <p>Tus datos y tu foto solo los uso yo para valorar tu solicitud y escribirte. No se comparten con nadie.</p>
+</div>
+
+<script>
+/* ══════════════════════════════════════════════════════════════════════
+   URL DEL APPS SCRIPT QUE RECIBE LAS SOLICITUDES
+   ══════════════════════════════════════════════════════════════════════
+   Está en la línea de abajo y es el único sitio del archivo que hay que
+   tocar. Mientras siga el marcador, el formulario NO envía: avisa de que
+   aún no está activo, para que nadie crea que ha mandado algo.
+
+   Tiene que ser la URL del DESPLIEGUE (Implementar → Gestionar
+   implementaciones), no la del editor. Termina en /exec y el identificador
+   son unas 70 letras y números seguidos, sin puntos.
+   ══════════════════════════════════════════════════════════════════════ */
+
+const SCRIPT_URL = 'PENDIENTE_URL_APPS_SCRIPT';
+
+/* ═════════════ a partir de aquí no hace falta tocar nada ═════════════ */
+
+const TOTAL = 10;
+const MARCADOR = 'PENDIENTE_URL_APPS_SCRIPT';
+let current = 1;
+let foto = null;          // { base64, tipo } ya comprimida
+let enviando = false;
+
+/* Identificador de este envío: si hay que reintentar, el servidor
+   reconoce el mismo id y no duplica la fila. */
+const SID = (window.crypto && crypto.randomUUID)
+  ? crypto.randomUUID()
+  : 'sid-' + Date.now().toString(36) + '-' + Math.random().toString(36).slice(2, 10);
+
+/* Campos de texto por pregunta */
+const TEXT_FIELDS = {
+  1:  { el: 'f1',  key: 'p01', required: true  },
+  2:  { el: 'f2',  key: 'p02', required: true  },
+  3:  { el: 'f3',  key: 'p03', required: true  },
+  5:  { el: 'f5',  key: 'p05', required: false },
+  6:  { el: 'f6',  key: 'p06', required: true  },
+  8:  { el: 'f8',  key: 'p08', required: true  },
+  9:  { el: 'f9',  key: 'p09', required: true  },
+  10: { el: 'f10', key: 'p10', required: true  }
+};
+
+/* Opciones unicas por pregunta */
+const OPTION_FIELDS = { 4: 'p04', 7: 'p07' };
+
+function $(id) { return document.getElementById(id); }
+
+function updateProgress() {
+  $('progressFill').style.width = (((current - 1) / TOTAL) * 100) + '%';
+}
+
+function goTo(n) {
+  $('q' + current).classList.remove('visible');
+  current = n;
+  $('q' + current).classList.add('visible');
+  updateProgress();
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+/* ---------- opciones ---------- */
+
+function initOptions() {
+  document.querySelectorAll('.options-list').forEach(list => {
+    const items = list.querySelectorAll('.option-item');
+    const qNum = list.closest('.question-block').id.replace('q', '');
+    const nextBtn = $('next' + qNum);
+
+    const pick = item => {
+      items.forEach(i => { i.classList.remove('selected'); i.setAttribute('aria-checked', 'false'); });
+      item.classList.add('selected');
+      item.setAttribute('aria-checked', 'true');
+      list.classList.remove('invalid');
+      if (nextBtn) nextBtn.disabled = false;
+    };
+
+    items.forEach(item => {
+      item.setAttribute('aria-checked', 'false');
+      item.addEventListener('click', () => pick(item));
+      item.addEventListener('keydown', ev => {
+        if (ev.key === ' ' || ev.key === 'Enter') { ev.preventDefault(); pick(item); }
+      });
+    });
+  });
+}
+
+function optionValue(name) {
+  const sel = document.querySelector('.options-list[data-name="' + name + '"] .option-item.selected');
+  return sel ? sel.querySelector('.option-label').textContent : '';
+}
+
+/* ---------- validacion ---------- */
+
+function textOk(step, focus) {
+  const cfg = TEXT_FIELDS[step];
+  if (!cfg) return true;
+  const el = $(cfg.el);
+  const err = $('e' + step);
+  const ok = !cfg.required || el.value.trim() !== '';
+  el.classList.toggle('invalid', !ok);
+  if (err) err.classList.toggle('visible', !ok);
+  if (!ok && focus) el.focus();
+  return ok;
+}
+
+function optionOk(step) {
+  const name = OPTION_FIELDS[step];
+  if (!name) return true;
+  const ok = optionValue(name) !== '';
+  document.querySelector('.options-list[data-name="' + name + '"]').classList.toggle('invalid', !ok);
+  return ok;
+}
+
+function fotoOk() {
+  const ok = !!foto;
+  $('uploadBox').classList.toggle('invalid', !ok);
+  $('e10foto').classList.toggle('visible', !ok);
+  return ok;
+}
+
+Object.entries(TEXT_FIELDS).forEach(([step, cfg]) => {
+  const el = $(cfg.el);
+  el.addEventListener('input', () => {
+    el.classList.remove('invalid');
+    const err = $('e' + step);
+    if (err) err.classList.remove('visible');
+  });
+});
+
+/* ---------- navegacion ---------- */
+
+for (let i = 1; i < TOTAL; i++) {
+  $('next' + i).addEventListener('click', () => {
+    if (!textOk(i, true) || !optionOk(i)) return;
+    goTo(i + 1);
+  });
+}
+
+for (let i = 2; i <= TOTAL; i++) {
+  $('back' + i).addEventListener('click', () => {
+    if (enviando) return;
+    const cfg = TEXT_FIELDS[i];
+    if (cfg) {
+      $(cfg.el).classList.remove('invalid');
+      const err = $('e' + i); if (err) err.classList.remove('visible');
+    }
+    goTo(i - 1);
+  });
+}
+
+/* ---------- foto: se comprime en el propio movil antes de enviar ---------- */
+
+function cargarImg(file) {
+  return new Promise((resolve, reject) => {
+    const url = URL.createObjectURL(file);
+    const img = new Image();
+    img.onload = () => { URL.revokeObjectURL(url); resolve(img); };
+    img.onerror = () => { URL.revokeObjectURL(url); reject(new Error('no-decodifica')); };
+    img.src = url;
+  });
+}
+
+function leerComoDataUrl(file) {
+  return new Promise((resolve, reject) => {
+    const r = new FileReader();
+    r.onload = () => resolve(r.result);
+    r.onerror = () => reject(new Error('no-lee'));
+    r.readAsDataURL(file);
+  });
+}
+
+async function prepararFoto(file) {
+  let fuente = null;
+  try {
+    if ('createImageBitmap' in window) {
+      fuente = await createImageBitmap(file, { imageOrientation: 'from-image' });
+    }
+  } catch (e) { fuente = null; }
+  if (!fuente) {
+    try { fuente = await cargarImg(file); } catch (e) { fuente = null; }
+  }
+
+  if (fuente) {
+    const pasos = [[1600, 0.82], [1200, 0.72], [900, 0.65]];
+    let dataUrl = '';
+    for (const [max, q] of pasos) {
+      const w0 = fuente.width, h0 = fuente.height;
+      const s = Math.min(1, max / Math.max(w0, h0));
+      const w = Math.max(1, Math.round(w0 * s)), h = Math.max(1, Math.round(h0 * s));
+      const c = document.createElement('canvas');
+      c.width = w; c.height = h;
+      const ctx = c.getContext('2d');
+      ctx.fillStyle = '#fff';
+      ctx.fillRect(0, 0, w, h);
+      ctx.drawImage(fuente, 0, 0, w, h);
+      dataUrl = c.toDataURL('image/jpeg', q);
+      if (dataUrl.length <= 1400000) break;
+    }
+    if (dataUrl && dataUrl.startsWith('data:image/jpeg')) {
+      return { dataUrl, tipo: 'image/jpeg' };
+    }
+  }
+
+  /* El navegador no sabe redibujarla: mandamos el original si es razonable */
+  if (/^image\/(jpeg|png|webp)$/.test(file.type) && file.size <= 6 * 1024 * 1024) {
+    return { dataUrl: await leerComoDataUrl(file), tipo: file.type };
+  }
+  throw new Error('formato');
+}
+
+$('foto').addEventListener('change', async ev => {
+  const file = ev.target.files && ev.target.files[0];
+  if (!file) return;
+  const state = $('uploadState');
+  state.classList.remove('error');
+  state.textContent = 'Preparando la foto…';
+  $('next10').disabled = true;
+  try {
+    const r = await prepararFoto(file);
+    foto = { base64: r.dataUrl.replace(/^data:[^;]+;base64,/, ''), tipo: r.tipo };
+    $('fotoPreview').src = r.dataUrl;
+    $('uploadPreview').classList.add('visible');
+    $('uploadBox').style.display = 'none';
+    $('uploadBox').classList.remove('invalid');
+    $('e10foto').classList.remove('visible');
+    state.textContent = '';
+  } catch (e) {
+    // Si ya había una foto buena, se conserva: la previsualización sigue siendo cierta
+    state.textContent = foto
+      ? 'No puedo leer esa foto. Me quedo con la que ya tenías; prueba con otra (JPG o PNG) si quieres cambiarla.'
+      : 'No puedo leer esta foto. Prueba con otra (JPG o PNG).';
+    state.classList.add('error');
+  } finally {
+    $('next10').disabled = false;
+    ev.target.value = '';   // permite volver a elegir la misma foto
+  }
+});
+
+$('fotoCambiar').addEventListener('click', () => $('foto').click());
+
+/* ---------- envio ---------- */
+
+function recogerRespuestas() {
+  const datos = {};
+  Object.values(TEXT_FIELDS).forEach(cfg => {
+    const v = $(cfg.el).value.trim();
+    datos[cfg.key] = v === '' ? '(Sin respuesta)' : v;
+  });
+  Object.values(OPTION_FIELDS).forEach(name => { datos[name] = optionValue(name); });
+  return datos;
+}
+
+function primeraIncompleta() {
+  for (let i = 1; i < TOTAL; i++) {
+    if (!textOk(i, false) || !optionOk(i)) return i;
+  }
+  return 0;
+}
+
+function setEnviando(on) {
+  enviando = on;
+  const btn = $('next10');
+  btn.disabled = on;
+  btn.classList.toggle('sending', on);
+  $('sendLabel').textContent = on ? 'Enviando…' : 'Enviar solicitud';
+  $('back10').disabled = on;
+  window.onbeforeunload = on ? () => true : null;
+}
+
+function mostrarError(msg) {
+  const st = $('sendState');
+  st.textContent = msg;
+  st.classList.add('error');
+}
+
+$('next10').addEventListener('click', async () => {
+  if (enviando) return;
+  $('sendState').textContent = '';
+  $('sendState').classList.remove('error');
+
+  const okFoto = fotoOk();
+  const okFrase = textOk(10, okFoto);
+  if (!okFoto || !okFrase) return;
+
+  const pendiente = primeraIncompleta();
+  if (pendiente) { goTo(pendiente); textOk(pendiente, true); return; }
+
+  if (SCRIPT_URL === MARCADOR) {
+    mostrarError('El formulario todavía no está activo. Vuelve a intentarlo en un rato.');
+    return;
+  }
+
+  setEnviando(true);
+  $('sendState').textContent = 'Subiendo tu solicitud. No cierres esta página.';
+
+  const payload = new FormData();
+  payload.append('sid', SID);
+  payload.append('enviado_en', new Date().toISOString());
+  Object.entries(recogerRespuestas()).forEach(([k, v]) => payload.append(k, v));
+  payload.append('p10_foto_base64', foto.base64);
+  payload.append('p10_foto_tipo', foto.tipo);
+
+  const ctrl = new AbortController();
+  const corte = setTimeout(() => ctrl.abort(), 90000);
+
+  try {
+    const res = await fetch(SCRIPT_URL, { method: 'POST', body: payload, signal: ctrl.signal });
+    const json = await res.json();
+    if (!json || json.ok !== true) throw new Error('rechazado');
+
+    setEnviando(false);
+    $('theForm').style.display = 'none';
+    $('progressFill').style.width = '100%';
+    $('thankyou').classList.add('visible');
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  } catch (e) {
+    setEnviando(false);
+    mostrarError('No se ha podido enviar. Tus respuestas siguen aquí: dale otra vez a Enviar. ' +
+                 'Si vuelve a fallar, escríbeme por Telegram a @Por_que_no_bot.');
+  } finally {
+    clearTimeout(corte);
+  }
+});
+
+initOptions();
+updateProgress();
+</script>
+</body>
+</html>

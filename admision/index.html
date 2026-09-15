@@ -940,7 +940,7 @@ $('next10').addEventListener('click', async () => {
   $('sendState').textContent = 'Subiendo tu solicitud. No cierres esta página.';
 
   const payload = new FormData();
-  payload.append('sid', SID);
+  payload.append('envio_id', SID);
   payload.append('enviado_en', new Date().toISOString());
   Object.entries(recogerRespuestas()).forEach(([k, v]) => payload.append(k, v));
   payload.append('p10_foto_base64', foto.base64);
